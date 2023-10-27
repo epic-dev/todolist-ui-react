@@ -24,8 +24,10 @@ const store = configureStore({
  * it's enough for me to look at the store directly in chrome dev tools :)
  * no need to install react dev tools
  * */
-//@ts-ignore
-window.store = store;
+if(process.env.NODE_ENV === 'development') {
+    //@ts-ignore
+    window.store = store;
+}
 
 export default store;
 

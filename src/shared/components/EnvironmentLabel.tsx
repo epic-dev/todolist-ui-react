@@ -35,7 +35,7 @@ const StyledDiv = styled.div<IEnvironmentLabelStyles>`
         content: "${prop => prop.$label}";
         color: white;
         font-weight: bold;
-        font-size: 10px;
+        font-size: 0.6rem;
         background: #ff8d3b;
     }
 `;

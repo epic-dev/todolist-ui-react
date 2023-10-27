@@ -12,7 +12,7 @@ const ButtonBase = styled.button<IBaseButtonStyles>`
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 0.7rem;
     line-height: 16px;
     box-sizing: border-box;
     display: flex;

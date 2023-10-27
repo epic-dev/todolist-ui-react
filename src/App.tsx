@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import './fonts/Roboto-Regular.ttf';
 import './fonts/Roboto-Medium.ttf';
-import { useAppSelector } from './redux/hooks';
 import { EnvironmentLabel, Layout, SessionProvider } from './shared/components';
 import { authHooks } from './modules/Authentication';
 import { Outlet } from 'react-router-dom';
 
 function App() {
   const [isProd] = useState<boolean>(process.env.NODE_ENV === 'production');
-  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+
+  if (!isProd) {
+    console.log('App.tsx is called');
+  }
 
   authHooks.useCheckAuth();
 

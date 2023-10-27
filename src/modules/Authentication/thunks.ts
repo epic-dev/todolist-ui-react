@@ -8,17 +8,13 @@ export const login = (email: string, password: string) =>
         try {
             const response = await AuthService.login(email, password);
             if (!response) {
-                console.log(response)
+                console.log('Login attempt is unsuccessful', response)
                 
                 return;
             }
             const { data } = response;
             dispatch(setSuccessAuth(data));
 
-            /** temporary: saving token to the local storage
-             * the better way is to store the token in httpOnly cookies
-             */
-            localStorage.setItem('token', data.accessToken);
             return true;
         } catch(e) {
             // FIXME
@@ -28,7 +24,6 @@ export const login = (email: string, password: string) =>
         }
     }
 export const logout = () => (dispatch: Dispatch) => {
-    localStorage.removeItem('token');
     dispatch(reset());
 };
 export const registration = (email: string, password: string) =>
@@ -36,8 +31,6 @@ export const registration = (email: string, password: string) =>
         try {
             const { data } = await AuthService.registration(email, password);
             dispatch(setSuccessAuth(data));
-            // see comment above
-            localStorage.setItem('token', data.accessToken);
             return true;
         } catch(e) {
             // FIXME DRY
