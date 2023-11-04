@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { FlexContainer } from "../../../shared/components";
 import { FlexItem } from "../../../shared/components/FlexItem";
 import { TodoListBase } from "../types/TodoListBase";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { FilterType, setSelected } from "../ToDoSlices";
 
 interface IDrawer {}
 
@@ -63,13 +65,13 @@ const getIconComponentByName = (name?: string) => {
     }
 }
 const CategoriesList: FC<{}> = () => {
-    
+    const dispatch = useAppDispatch();
     const predefinedLists: TodoListBase[] = [
-        {id: '1', name: 'Essential tasks', group: false, icon: 'star', count: 0, items: [], selected: false},
-        {id: '2', name: 'Today Tasks', group: false, icon: 'clock', count: 0, items: [], selected: true},
-        {id: '5', name: 'Planned', group: false, icon: 'calendar', count: 0, items: [], selected: false},
-        {id: '3', name: 'Categories', group: true, icon: 'list', count: 0, items: [{ name: 'category 1' }], selected: false},
-        {id: '4', name: 'All Tasks', group: false, icon: 'aligned', count: 0, items: [], selected: false},
+        {id: '1', name: 'Essential tasks', group: false, icon: 'star', count: 0, items: [], selected: false, filterType: FilterType.Essential},
+        {id: '2', name: 'Today Tasks', group: false, icon: 'clock', count: 0, items: [], selected: true, filterType: FilterType.Today},
+        {id: '5', name: 'Planned', group: false, icon: 'calendar', count: 0, items: [], selected: false, filterType: FilterType.Planned},
+        {id: '3', name: 'Categories', group: true, icon: 'list', count: 0, items: [{ name: 'category 1' }], selected: false, filterType: FilterType.Custom},
+        {id: '4', name: 'All Tasks', group: false, icon: 'aligned', count: 0, items: [], selected: false, filterType: FilterType.All},
     ];
     return <FlexContainer $direction="column" $padding="30px 16px 0">
         {
@@ -81,6 +83,7 @@ const CategoriesList: FC<{}> = () => {
                     items={list.items}
                     icon={list.icon}
                     selected={list.selected}
+                    filterType={list.filterType}
                 />
             })
         }
@@ -94,24 +97,29 @@ interface ICategoryListItem {
     items?: any,
     icon?: string,
     selected?: boolean,
+    filterType?: FilterType,
 }
 // interface IToDoListItem extends IListItem {
 //     categoryIcon?: React.ReactElement,
 //     completed?: boolean,
 // }
 const CategoryListItem: FC<ICategoryListItem> = (props) => {
+    const dispatch = useAppDispatch();
+    const selectedFilter = useAppSelector(state => state.todos.selectedFilter);
     const [open, setOpen] = useState(false);
     const onClick = (e: React.MouseEvent) => {
         e.stopPropagation();
         setOpen(isOpen => !isOpen);
+        dispatch(setSelected(props.filterType ?? selectedFilter))
     };
     
     return <FlexContainer
         style={{
             borderRadius: '10px',
             fontSize: '1rem',
-            backgroundColor: props.selected ? '#4f4f71' : '#242443',
+            backgroundColor: selectedFilter === props.filterType ? '#4f4f71' : '#242443',
             color: '#FFFFFF',
+            cursor: 'pointer',
         }}
         $padding="12px"
         $margin="0 0 20px"

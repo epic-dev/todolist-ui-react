@@ -1,5 +1,6 @@
 import { Middleware, configureStore } from "@reduxjs/toolkit";
 import { rootReducer } from "./reducers";
+import { baseMiddleware } from "./middlewares";
 
 let loggingMiddleware: Middleware = () => () => () => {};
 
@@ -17,8 +18,8 @@ const store = configureStore({
     reducer: rootReducer,
     middleware: (_default) =>
         _default()
+        .concat(baseMiddleware.middleware)
         .concat(loggingMiddleware),
-
 });
 /**
  * it's enough for me to look at the store directly in chrome dev tools :)

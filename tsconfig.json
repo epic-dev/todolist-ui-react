@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-  ]
+, "../../server/todolist-api/src/seed.ts"  ]
 }

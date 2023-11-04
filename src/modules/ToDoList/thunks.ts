@@ -4,6 +4,8 @@ import { IToDoResponse } from "./interfaces/IToDoResponse";
 import { newToDoAdded, setFailedState, setOneToDo, setToDos } from "./ToDoSlices";
 import { AxiosError } from "axios";
 import { IToDo } from "./interfaces/IToDo";
+import { createApi } from "@reduxjs/toolkit/query";
+import { baseMiddleware } from "../../redux/middlewares";
 
 export const fetchAll = () => async (dispatch: Dispatch) => {
     try {
@@ -34,4 +36,13 @@ export const addNewToDo = (label: string) => async (dispatch: Dispatch) => {
     }
 }
 
-// export const todoApi = createApi
+export const todoApi = baseMiddleware.injectEndpoints({
+    endpoints: (build) => ({
+        fetchAllTodos: build.query<IToDo[], string>({
+            query: () => 'todo/fetch',
+        }),
+    }),
+    overrideExisting: false,
+})
+
+export const { useFetchAllTodosQuery, useLazyFetchAllTodosQuery } = todoApi;

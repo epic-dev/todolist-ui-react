@@ -1,3 +1,5 @@
+import { FilterType } from "../ToDoSlices";
+
 export type TodoListBase = {
     id: string,
     name: string,
@@ -6,6 +8,7 @@ export type TodoListBase = {
     count: number,
     items: TodoListGroupItem[],
     selected: boolean,
+    filterType?: FilterType,
 };
 
 export type TodoListGroupItem = {

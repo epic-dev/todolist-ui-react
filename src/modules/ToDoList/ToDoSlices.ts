@@ -1,6 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IToDo } from "./interfaces/IToDo";
 
+export enum FilterType {
+    Essential,
+    Today,
+    Planned,
+    All,
+    Custom,
+}
+
 interface IToDoInitialState {
     entry: IToDo | null;
 
@@ -8,9 +16,11 @@ interface IToDoInitialState {
 
     entries: IToDo[] | null;
     errors: string[] | null;
+
+    selectedFilter: FilterType;
 }
 
-// probbaly could be union type
+// probably could be union type
 const initialState: IToDoInitialState = {
     entry: null,
 
@@ -18,6 +28,8 @@ const initialState: IToDoInitialState = {
 
     entries: [],
     errors: null,
+
+    selectedFilter: FilterType.Today,
 }
 
 export const ToDoSlice = createSlice({
@@ -36,10 +48,13 @@ export const ToDoSlice = createSlice({
         },
         newToDoAdded: (state, action: PayloadAction<boolean>) => {
             state.successfullyAdded = action.payload;
+        },
+        setSelected: (state, action: PayloadAction<FilterType>) => {
+            state.selectedFilter = action.payload;
         }
     }
 });
 
-export const { setToDos, setFailedState, setOneToDo, newToDoAdded } = ToDoSlice.actions;
+export const { setToDos, setFailedState, setOneToDo, newToDoAdded, setSelected } = ToDoSlice.actions;
 
 export default ToDoSlice.reducer;

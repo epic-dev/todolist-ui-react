@@ -1,17 +1,19 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { addNewToDo, fetchAll } from "../thunks";
+import { addNewToDo, fetchAll, useFetchAllTodosQuery } from "../thunks";
 import { Drawer, StyledDrawer, UserInfoBar } from "./Drawer";
 import { FlexContainer, TextInput } from "../../../shared/components";
 import { GridContainer } from "../../../shared/components/GridContainer";
 import { GridItem } from "../../../shared/components/GridItem";
 import { StickyFooter } from "../../../shared/components/StickyFooter";
+import { IToDo } from "../interfaces/IToDo";
 
 interface IToDoList { }
 
 const ToDoList: FC<IToDoList> = () => {
     const [label, setLabel] = useState('');
     const dispatch = useAppDispatch()
+    const allToDos = useAppSelector(state => state.todos.entries);
     const MOCK = [
         {id: 1, label: 'drawer with search by all items'},
         {id: 2, label: 'avatar with user name'},
@@ -28,6 +30,8 @@ const ToDoList: FC<IToDoList> = () => {
     // const entries = useAppSelector(state => state.todos.entries) ?? MOCK //[]
     const entries = MOCK //[]
 
+    const { data } = useFetchAllTodosQuery('fetchAll');
+    
     const fetch = () => {
         dispatch(fetchAll());
     }
@@ -37,19 +41,19 @@ const ToDoList: FC<IToDoList> = () => {
         dispatch(fetchAll());
     }
     const getItems = () => {
-        return <ul style={{ color: 'white'}}>{entries.map(e => <li key={e.id}>{e.label}</li>)}</ul>
+        return <ul style={{ color: 'white'}}>{data?.map(e => <li key={e.id}>{e.label} due date {e.dueDate} {e.isEssential && '!'}</li>)}</ul>
     }
 
     // TODO: instead of 300px use minmax()
     return (<GridContainer
-            className="ToDoListContainer"
-            $columns={['300px', 'auto']}
-            $rows={['auto', '50px']}
-            $height={'100vh'}
-            $gutter={24}
-        >
+        className="ToDoListContainer"
+        $columns={['300px', 'auto']}
+        $rows={['auto', '50px']}
+        $height={'100vh'}
+        $gutter={24}
+    >
         <GridItem $row="1 / span 2" className="GridItemDrawerContainer">
-        <Drawer/>
+            <Drawer/>
         </GridItem>
         <GridItem $row="1 / 2" $column="2 / -1" className="TodoListItems" $padding={24}>
             {/* 
@@ -58,7 +62,7 @@ const ToDoList: FC<IToDoList> = () => {
                 - move each list to separate component or create generic one
              */}
             {
-                entries.length > 0 && getItems()
+                data && data.length > 0 && getItems()
             }
         </GridItem>
         <GridItem $row="2 / -1">
